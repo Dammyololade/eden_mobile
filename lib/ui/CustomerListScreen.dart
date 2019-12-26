@@ -100,7 +100,8 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddCustomer()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => AddCustomerScreen()));
         },
         child: Icon(Icons.add),
       ),

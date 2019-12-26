@@ -28,6 +28,10 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         var customers = await fetchCustomers();
         yield CustomerLoaded(customers: customers);
         return;
+      } else if (currentState is AddCustomer) {
+        var result = await firestore.collection("customers").add(
+            currentState.customerModel.toMap());
+        this.add(Fetch());
       }
 
     } catch (error) {
@@ -58,6 +62,14 @@ abstract class CustomerState {
 }
 
 class CustomerUninitialized extends CustomerState {}
+
+
+class AddCustomer extends CustomerState {
+  CustomerModel customerModel;
+
+  AddCustomer(this.customerModel);
+
+}
 
 class CustomerError extends CustomerState {}
 

@@ -14,6 +14,9 @@ class CustomerModel extends BaseModel{
 
   String name, address, mobile;
 
+
+  CustomerModel({this.name, this.address, this.mobile});
+
   @override
   createObjectFromMap(Map data) {
     return null;
