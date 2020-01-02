@@ -1,4 +1,6 @@
 import 'package:eden_mobile/AppConfig.dart';
+import 'package:eden_mobile/bloc/events/customer_event.dart';
+import 'package:eden_mobile/bloc/states/customer_state.dart';
 import 'package:eden_mobile/model/CustomerModel.dart';
 import 'package:eden_mobile/model/customer_bloc.dart';
 import 'package:eden_mobile/ui/customer/AddCustomer.dart';
@@ -29,7 +31,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
   @override
   void initState() {
     _customerBloc = BlocProvider.of<CustomerBloc>(context);
-    _customerBloc.add(Fetch());
+    _customerBloc.add(CustomerEvent.fetch());
     super.initState();
   }
 
@@ -70,29 +72,27 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               child: BlocBuilder<CustomerBloc, CustomerState>(
                 // ignore: missing_return
                   builder: (context, state) {
-                    if (state is CustomerUninitialized) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (state is CustomerError) {
-                      return Center(
-                        child: Text('failed to fetch customers'),
-                      );
-                    }
-                    if (state is CustomerLoaded) {
-                      if (state.customers.isEmpty) {
-                        return Center(
-                          child: Text('no customer'),
-                        );
-                      }
-                      return ListView.builder(
-                          itemCount: state.customers.length,
-                          itemBuilder: (context, index) {
-                            return _buildItem(state.customers[index]);
-                          }
-                      );
-                    }
+                    return state.when(
+                        initial: (_) =>
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                        loading: (_) =>
+                            Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                        loaded: (state) =>
+                            ListView.builder(
+                                itemCount: state.customers.length,
+                                itemBuilder: (context, index) {
+                                  return _buildItem(state.customers[index]);
+                                }
+                            ),
+                        add: null,
+                        error: (_) =>
+                            Center(
+                              child: Text('failed to fetch customers'),
+                            ));
                   }
               )
           ),
@@ -117,8 +117,11 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             children: <Widget>[
               CircleAvatar(
                 radius: 25,
-                backgroundColor: RandomColor().randomColor(colorBrightness: ColorBrightness.dark, colorSaturation: ColorSaturation.random),
-                child: Text("${Utility.extractFirstLetter(model.name)}", style: TextStyle(color: Colors.white),),
+                backgroundColor: RandomColor().randomColor(
+                    colorBrightness: ColorBrightness.dark,
+                    colorSaturation: ColorSaturation.random),
+                child: Text("${Utility.extractFirstLetter(model.name)}",
+                  style: TextStyle(color: Colors.white),),
               ),
               SizedBox(width: 15,),
               Expanded(child: Column(
@@ -136,8 +139,8 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                   SizedBox(height: 3,),
                   Text("${model.mobile}",
                     style: TextStyle(
-                      fontFamily: "ARoman",
-                      fontSize: 13
+                        fontFamily: "ARoman",
+                        fontSize: 13
                     ),
                   ),
 //                  SizedBox(height: 3,),
