@@ -52,7 +52,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   Future<List<CustomerModel>> fetchCustomers() async {
     List<CustomerModel> customers = [];
     try {
-      var response = await firestore.collection("customers").getDocuments();
+      var response = await firestore.collection("customers")
+          .orderBy("name", descending: false)
+          .getDocuments();
       response.documents.forEach((snapshot) {
         customers.add(CustomerModel.fromSnapshot(snapshot));
       });

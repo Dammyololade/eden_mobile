@@ -37,34 +37,39 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: AppConfig.APP_PRIMARY_COLOR_DARK
-    ));
-
+    AppConfig.setSystemChrome();
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Customers", style: TextStyle(color: Colors.black),),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
+//      appBar: AppBar(
+//        title: Text("Customers", style: TextStyle(color: Colors.black),),
+//        elevation: 0,
+//        backgroundColor: Colors.white,
+//        centerTitle: true,
+//      ),
       body: Column(
         children: <Widget>[
 
           Container(
-            margin: EdgeInsets.symmetric(vertical: 5),
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            color: Color(0xfff8f8f8),
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.search, color: Colors.black45,),
-                SizedBox(width: 5,),
-                Expanded(
-                    child: NovuWidgets.signUpTextField(
-                        "Search", _searchController)
-                )
-              ],
+            color: Color(0xffF1F1F9),
+            child: Container(
+              margin: EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 30),
+              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.black12.withOpacity(0.1),
+                  )
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.search, color: Colors.black45,),
+                  Expanded(
+                      child: NovuWidgets.signUpTextField(
+                          "Search Customers", _searchController)
+                  )
+                ],
+              ),
             ),
           ),
 
@@ -101,7 +106,11 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AddCustomerScreen()));
+              MaterialPageRoute(builder: (context) =>
+                  BlocProvider<CustomerBloc>(
+                    create: (context) => _customerBloc,
+                    child: AddCustomerScreen(),
+                  )));
         },
         child: Icon(Icons.add),
       ),

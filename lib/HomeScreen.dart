@@ -1,7 +1,9 @@
+import 'package:eden_mobile/AppConfig.dart';
 import 'package:eden_mobile/model/customer_bloc.dart';
 import 'package:eden_mobile/ui/CustomerListScreen.dart';
 import 'package:eden_mobile/ui/ProfileScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc/bloc.dart';
 
@@ -25,21 +27,29 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _screens = [
-      BlocProvider(
-        create: (context) => CustomerBloc(),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<CustomerBloc>(
+            create: (context) => CustomerBloc(),
+          ),
+        ],
         child: CustomerListScreen(),
       ),
+
       ProfileScreen()
     ];
   }
 
   @override
   Widget build(BuildContext context) {
+    AppConfig.setSystemChrome();
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color(0xffF1F1F9),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.people), //AppIcons.home),

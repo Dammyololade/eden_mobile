@@ -79,7 +79,6 @@ class Loaded<T> extends CustomerState<T> {
 
   @override
   String toString() => 'Loaded(customers:${this.customers})';
-
   @override
   List get props => [customers];
 }
@@ -92,7 +91,6 @@ class Add<T> extends CustomerState<T> {
 
   @override
   String toString() => 'Add(customer:${this.customer})';
-
   @override
   List get props => [customer];
 }
@@ -105,7 +103,6 @@ class Error<T> extends CustomerState<T> {
 
   @override
   String toString() => 'Error(message:${this.message})';
-
   @override
   List get props => [message];
 }

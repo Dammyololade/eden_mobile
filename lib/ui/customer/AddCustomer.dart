@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:eden_mobile/AppConfig.dart';
+import 'package:eden_mobile/bloc/events/customer_event.dart';
 import 'package:eden_mobile/model/CustomerModel.dart';
+import 'package:eden_mobile/model/customer_bloc.dart';
 import 'package:eden_mobile/ui/PhoneContactScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_tools/flutter_base_tools.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:random_color/random_color.dart';
 
@@ -32,6 +35,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen>
 
   @override
   Widget build(BuildContext context) {
+    AppConfig.setSystemChrome();
     return Scaffold(
       appBar: NovuWidgets.appBar("Add Customer", actions: [
         IconButton(
@@ -99,7 +103,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen>
 
                 NovuWidgets.progressAwareButton(
                     notifier: progressNotifier,
-                    child: NovuWidgets.positiveButton("Submit", () {},
+                    child: NovuWidgets.positiveButton("Submit", _submit,
                         bgColor: AppConfig.APP_PRIMARY_COLOR))
               ],
             ),
@@ -109,11 +113,18 @@ class _AddCustomerScreenState extends State<AddCustomerScreen>
     );
   }
 
-  void _submit() {
+  void _submit() async {
     if (nameController.text.isNotEmpty) {
       CustomerModel model = CustomerModel(name: nameController.text,
           mobile: mobileController.text,
           address: addressController.text);
+      progressNotifier.value = true;
+      await AppConfig.customerColRef.add(model.toMap());
+      var bloc = BlocProvider.of<CustomerBloc>(context);
+      bloc.add(CustomerEvent.fetch());
+      bloc.close();
+      progressNotifier.value = false;
+      Navigator.of(context).pop();
     } else {
       showBottomNotification(
           context, message: "please enter the customer's name");

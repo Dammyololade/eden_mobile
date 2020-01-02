@@ -80,7 +80,6 @@ class LoadMore extends CustomerEvent {
 
   @override
   String toString() => 'LoadMore(currentPage:${this.currentPage})';
-
   @override
   List get props => [currentPage];
 }
@@ -94,7 +93,6 @@ class AddCustomer extends CustomerEvent {
 
   @override
   String toString() => 'AddCustomer(customer:${this.customer})';
-
   @override
   List get props => [customer];
 }
@@ -107,7 +105,6 @@ class Search extends CustomerEvent {
 
   @override
   String toString() => 'Search(searchTerm:${this.searchTerm})';
-
   @override
   List get props => [searchTerm];
 }
